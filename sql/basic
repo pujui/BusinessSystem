@@ -1,0 +1,29 @@
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+`userId` int(10) unsigned NOT NULL COMMENT '使用者流水序號',
+  `userAcc` varchar(20) NOT NULL COMMENT '使用者帳號',
+  `userName` varchar(20) NOT NULL COMMENT '使用者名稱',
+  `userPwd` varchar(50) NOT NULL COMMENT '使用者密碼',
+  `isClosed` tinyint(1) unsigned NOT NULL COMMENT '是否啟用',
+  `userPower` int(10) unsigned NOT NULL COMMENT '使用者權限'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理使用者';
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+ ADD PRIMARY KEY (`userId`), ADD UNIQUE KEY `userAcc` (`userAcc`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+MODIFY `userId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者流水序號';
