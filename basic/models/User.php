@@ -1,103 +1,43 @@
 <?php
-
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
-{
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+use app\models\baseModel;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentity($id)
-    {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+class User extends baseModel{
+    
+    private $table_user;
+    
+    public function __construct(){
+        $this->table_user = DB_PREFIX_BS . 'user';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+    public function findUserById($userId){
+        $sql = "SELECT * 
+                FROM {$this->table_user} 
+                WHERE userId=:userId";
+        return $this->createCommand($sql)
+                    ->bindValue(':userId', $userId)
+                    ->queryAll()[0];
     }
 
-    /**
-     * Finds user by username
-     *
-     * @param  string      $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+    public function create($params){
+        $sql = "INSERT INTO {$this->table_user}
+                    (userAcc, userName, userPwd, isClosed)
+                VALUES
+                    (:userAcc, :userName, :userPwd, :isClosed)";
+        $result = $this->createCommand($sql)
+                        ->bindValues([
+                            ':userAcc' => $params['userAcc'],
+                            ':userName' => $params['userName'],
+                            ':userPwd' => $this->generatePassword($params['userAcc'], $params['userPwd']),
+                            ':isClosed' => '1',
+                        ])
+                        ->execute();
+        return ($result > 0);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getId()
-    {
-        return $this->id;
+    public function generatePassword($userAcc, $userPwd){
+        return sha1($userAcc.':'.$userPwd);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param  string  $password password to validate
-     * @return boolean if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
 }
