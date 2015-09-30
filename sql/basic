@@ -27,3 +27,47 @@ ALTER TABLE `user`
 --
 ALTER TABLE `user`
 MODIFY `userId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者流水序號';
+
+--**************************************************************************************************
+--**************************************************************************************************
+--**************************************************************************************************
+--**************************************************************************************************
+--**************************************************************************************************
+
+
+--
+-- Table structure for table `warranty`
+--
+
+CREATE TABLE IF NOT EXISTS `warranty` (
+`warrantyId` int(10) unsigned NOT NULL COMMENT '保證書流水序號',
+  `warrantySerial` varchar(50) NOT NULL COMMENT '保證書證號',
+  `customerId` int(10) unsigned NOT NULL COMMENT '客戶流水序號',
+  `buyTime` datetime NOT NULL COMMENT '客戶流水序號',
+  `warrantyTime` int(10) unsigned NOT NULL COMMENT '保證期限',
+  `expireTime` date NOT NULL COMMENT '保證年限',
+  `itemId` int(10) unsigned NOT NULL COMMENT '商品流水序號',
+  `createTime` datetime NOT NULL COMMENT '新增時間',
+  `updateTime` datetime NOT NULL COMMENT '更新時間'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='維修保證書';
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `warranty`
+--
+ALTER TABLE `warranty`
+ ADD PRIMARY KEY (`warrantyId`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `warranty`
+--
+ALTER TABLE `warranty`
+MODIFY `warrantyId` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '保證書流水序號';
+
